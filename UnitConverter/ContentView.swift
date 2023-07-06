@@ -8,18 +8,24 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var selectedSourceUnit = Unit.meters
+    @State private var selectedSourceUnit = UnitLength.meters
     @State private var sourceValue = 0.0
-    @State private var selectedDestinationUnit = Unit.kilometers
+    @State private var selectedDestinationUnit = UnitLength.kilometers
     
-    private let availableSourceUnits = Unit.allCases
+    private let availableSourceUnits = [
+        UnitLength.meters,
+        UnitLength.kilometers,
+        UnitLength.feet,
+        UnitLength.miles,
+        UnitLength.nauticalMiles
+    ]
     
-    private var availableDestinationUnits: [Unit] {
-        availableSourceUnits.filter { $0.rawValue != selectedSourceUnit.rawValue }
+    private var availableDestinationUnits: [UnitLength] {
+        availableSourceUnits.filter { $0 != selectedSourceUnit }
     }
     
     private var destinationValue: Double {
-        sourceValue * selectedSourceUnit.ratioToMeters / selectedDestinationUnit.ratioToMeters
+        Measurement(value: sourceValue, unit: selectedSourceUnit).converted(to: selectedDestinationUnit).value
     }
     
     var body: some View {
@@ -29,7 +35,7 @@ struct ContentView: View {
                 
                 Picker("Unit", selection: $selectedSourceUnit) {
                     ForEach(availableSourceUnits, id: \.self) {
-                        Text($0.rawValue)
+                        Text($0.symbol)
                     }
                 }
             } header: {
@@ -39,7 +45,7 @@ struct ContentView: View {
             Section {
                 Picker("Unit", selection: $selectedDestinationUnit) {
                     ForEach(availableDestinationUnits, id: \.self) {
-                        Text($0.rawValue)
+                        Text($0.symbol)
                     }
                 }
                 
