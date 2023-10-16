@@ -30,7 +30,7 @@ struct ContentView: View {
     
     var body: some View {
         Form {
-            Section {
+            Section("I want to convert") {
                 TextField("Value", value: $sourceValue, format: .number)
                 
                 Picker("Unit", selection: $selectedSourceUnit) {
@@ -38,11 +38,9 @@ struct ContentView: View {
                         Text($0.symbol)
                     }
                 }
-            } header: {
-                Text("I want to convert")
             }
             
-            Section {
+            Section("To") {
                 Picker("Unit", selection: $selectedDestinationUnit) {
                     ForEach(availableDestinationUnits, id: \.self) {
                         Text($0.symbol)
@@ -50,8 +48,6 @@ struct ContentView: View {
                 }
                 
                 Text(destinationValue, format: .number)
-            } header: {
-                Text("To")
             }
         }
         .onAppear {
@@ -62,8 +58,6 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
+#Preview {
+    ContentView()
 }
